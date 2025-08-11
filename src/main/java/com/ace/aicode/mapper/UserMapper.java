@@ -1,7 +1,7 @@
 package com.ace.aicode.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.ace.aicode.entity.User;
+import com.ace.aicode.model.entity.User;
 
 /**
  * 用户 映射层。
