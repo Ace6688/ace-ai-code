@@ -9,10 +9,13 @@ spring:
     password: 12345678
   profiles:
     active: local
+  lifecycle:
+    timeout-per-shutdown-phase: 60s
 server:
   port: 8222
   servlet:
     context-path: /api
+  shutdown: graceful
 # springdoc-openapi
 springdoc:
   group-configs:
@@ -23,5 +26,4 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
-
 

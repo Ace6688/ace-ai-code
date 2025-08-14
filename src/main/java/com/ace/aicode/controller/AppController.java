@@ -12,10 +12,7 @@ import com.ace.aicode.constant.UserConstant;
 import com.ace.aicode.exception.BusinessException;
 import com.ace.aicode.exception.ErrorCode;
 import com.ace.aicode.exception.ThrowUtils;
-import com.ace.aicode.model.dto.app.AppAddRequest;
-import com.ace.aicode.model.dto.app.AppAdminUpdateRequest;
-import com.ace.aicode.model.dto.app.AppQueryRequest;
-import com.ace.aicode.model.dto.app.AppUpdateRequest;
+import com.ace.aicode.model.dto.app.*;
 import com.ace.aicode.model.entity.User;
 import com.ace.aicode.model.enums.CodeGenTypeEnum;
 import com.ace.aicode.model.vo.AppVO;
@@ -312,6 +309,24 @@ public class AppController {
                                 .data("")
                                 .build()
                 ));
+    }
+    /**
+     * 应用部署
+     *
+     * @param appDeployRequest 部署请求
+     * @param request          请求
+     * @return 部署 URL
+     */
+    @PostMapping("/deploy")
+    public BaseResponse<String> deployApp(@RequestBody AppDeployRequest appDeployRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(appDeployRequest == null, ErrorCode.PARAMS_ERROR);
+        Long appId = appDeployRequest.getAppId();
+        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
+        // 获取当前登录用户
+        User loginUser = userService.getLoginUser(request);
+        // 调用服务部署应用
+        String deployUrl = appService.deployApp(appId, loginUser);
+        return ResultUtils.success(deployUrl);
     }
 
 }
