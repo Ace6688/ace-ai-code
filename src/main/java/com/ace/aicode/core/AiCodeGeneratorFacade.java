@@ -1,6 +1,7 @@
 package com.ace.aicode.core;
 
 import com.ace.aicode.ai.AiCodeGeneratorService;
+import com.ace.aicode.ai.AiCodeGeneratorServiceFactory;
 import com.ace.aicode.ai.model.HtmlCodeResult;
 import com.ace.aicode.ai.model.MultiFileCodeResult;
 import com.ace.aicode.core.parser.CodeParserExecutor;
@@ -24,7 +25,11 @@ import java.io.File;
 public class AiCodeGeneratorFacade {
 
     @Resource
-    private AiCodeGeneratorService aiCodeGeneratorService;
+    private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
+
+    // 根据 appId 获取对应的 AI 服务实例
+
+
     /**
      * 统一入口：根据类型生成并保存代码（使用 appId）
      *
@@ -33,6 +38,7 @@ public class AiCodeGeneratorFacade {
      * @return 保存的目录
      */
     public File generateAndSaveCode(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
@@ -60,6 +66,7 @@ public class AiCodeGeneratorFacade {
      * @param appId           应用 ID
      */
     public Flux<String> generateAndSaveCodeStream(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
