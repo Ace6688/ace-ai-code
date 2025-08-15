@@ -3,10 +3,14 @@ package com.ace.aicode;
 import com.ace.aicode.ai.AiCodeGeneratorService;
 import com.ace.aicode.ai.model.HtmlCodeResult;
 import com.ace.aicode.ai.model.MultiFileCodeResult;
+import com.ace.aicode.model.enums.CodeGenTypeEnum;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @SpringBootTest
 class AiCodeGeneratorServiceTest {
@@ -25,5 +29,6 @@ class AiCodeGeneratorServiceTest {
         MultiFileCodeResult multiFileCode = aiCodeGeneratorService.generateMultiFileCode("做个程序员翘楚的留言板，不超过30行");
         Assertions.assertNotNull(multiFileCode);
     }
+
 
 }
