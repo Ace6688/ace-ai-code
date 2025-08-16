@@ -1,6 +1,6 @@
 package com.ace.aicode.ai;
 
-import com.ace.aicode.ai.tools.FileWriteTool;
+import com.ace.aicode.ai.tools.*;
 import com.ace.aicode.exception.BusinessException;
 import com.ace.aicode.exception.ErrorCode;
 import com.ace.aicode.model.enums.CodeGenTypeEnum;
@@ -37,6 +37,9 @@ public class AiCodeGeneratorServiceFactory {
     private RedisChatMemoryStore redisChatMemoryStore;
     @Resource
     private ChatHistoryService chatHistoryService;
+    @Resource
+    private ToolManager toolManager;
+
     /**
      * 默认提供一个 Bean
      */
@@ -98,11 +101,12 @@ public class AiCodeGeneratorServiceFactory {
             case VUE_PROJECT -> AiServices.builder(AiCodeGeneratorService.class)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)
-                    .tools(new FileWriteTool())
+                    .tools(toolManager.getAllTools())
                     .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
                             toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
                     ))
                     .build();
+
             // HTML 和多文件生成使用默认模型
             case HTML, MULTI_FILE -> AiServices.builder(AiCodeGeneratorService.class)
                     .chatModel(chatModel)
