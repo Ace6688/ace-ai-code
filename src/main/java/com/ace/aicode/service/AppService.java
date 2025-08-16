@@ -1,5 +1,6 @@
 package com.ace.aicode.service;
 
+import com.ace.aicode.model.dto.app.AppAddRequest;
 import com.ace.aicode.model.dto.app.AppQueryRequest;
 import com.ace.aicode.model.entity.User;
 import com.ace.aicode.model.vo.AppVO;
@@ -16,6 +17,8 @@ import java.util.List;
  * @author <a href="https://github.com/Ace6688">翘楚</a>
  */
 public interface AppService extends IService<App> {
+
+    Long createApp(AppAddRequest appAddRequest, User loginUser);
 
     void generateAppScreenshotAsync(Long appId, String appUrl);
 
