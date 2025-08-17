@@ -6,6 +6,7 @@ import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolMemoryId;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +17,7 @@ import java.nio.file.Paths;
  * 文件读取工具
  * 支持 AI 通过工具调用的方式读取文件内容
  */
+@Component
 @Slf4j
 public class FileReadTool extends BaseTool {
 
