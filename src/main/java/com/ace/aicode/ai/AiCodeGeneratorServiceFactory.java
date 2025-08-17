@@ -1,5 +1,7 @@
 package com.ace.aicode.ai;
 
+import com.ace.aicode.ai.guardrail.PromptSafetyInputGuardrail;
+import com.ace.aicode.ai.guardrail.RetryOutputGuardrail;
 import com.ace.aicode.ai.tools.*;
 import com.ace.aicode.exception.BusinessException;
 import com.ace.aicode.exception.ErrorCode;
@@ -93,7 +95,6 @@ public class AiCodeGeneratorServiceFactory {
         // 从数据库加载历史对话到记忆中
         chatHistoryService.loadChatHistoryToMemory(appId, chatMemory, 20);
         // 根据代码生成类型选择不同的模型配置
-        // 根据代码生成类型选择不同的模型配置
         return switch (codeGenType) {
             case VUE_PROJECT -> {
                 // 使用多例模式的 StreamingChatModel 解决并发问题
@@ -102,9 +103,12 @@ public class AiCodeGeneratorServiceFactory {
                         .streamingChatModel(reasoningStreamingChatModel)
                         .chatMemoryProvider(memoryId -> chatMemory)
                         .tools(toolManager.getAllTools())
+                        .inputGuardrails(new PromptSafetyInputGuardrail())
+                        .outputGuardrails(new RetryOutputGuardrail())
                         .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
                                 toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()
                         ))
+
                         .build();
             }
             case HTML, MULTI_FILE -> {
@@ -114,6 +118,8 @@ public class AiCodeGeneratorServiceFactory {
                         .chatModel(chatModel)
                         .streamingChatModel(openAiStreamingChatModel)
                         .chatMemory(chatMemory)
+                        .inputGuardrails(new PromptSafetyInputGuardrail())
+                        .outputGuardrails(new RetryOutputGuardrail())
                         .build();
             }
             default -> throw new BusinessException(ErrorCode.SYSTEM_ERROR,
